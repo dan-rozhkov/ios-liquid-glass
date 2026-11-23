@@ -1,0 +1,7 @@
+# Built examples (python3 examples/build.py inlines glass.css/js into *.src.html → *.html)
+examples/*.html
+!examples/*.src.html
+# Reference screenshots are third-party app screens: kept locally, not published
+examples/*-ref.*
+.DS_Store
+node_modules/

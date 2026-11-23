@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Tab bar lens</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{--f:-apple-system,"SF Pro Text",system-ui,sans-serif;font-family:var(--f);-webkit-font-smoothing:antialiased;color:#0f1419;background:#e9e9ee;
+  display:grid;place-items:center;min-height:100vh}
+/* iPhone Pro, 393 × 852 pt. Shoot .scr at dpr 3 (or 2.63 to compare with the X reference recording). */
+.scr{position:relative;width:393px;height:852px;background:#fff;overflow:hidden;border-radius:55px;user-select:none;touch-action:none}
+.feed{position:absolute;inset:0;padding:640px 16px 0 68px}
+.feed .who{position:absolute;left:16px;top:470px;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#f4a,#a4f)}
+.feed p{position:absolute;left:68px;right:16px;top:470px;font:400 15px/20px var(--f)}
+/* a photo-like media card whose lower edge runs under the bar, as in the reference */
+.media{position:absolute;left:68px;right:16px;top:540px;height:261px;border-radius:16px;
+  background:radial-gradient(60% 50% at 30% 35%,#6b5d55,transparent 70%),radial-gradient(40% 40% at 75% 70%,#9a9aa4,transparent 70%),
+  linear-gradient(180deg,#3d3a3a,#5e5b5e 55%,#7a787d);}
+.media:after{content:"";position:absolute;left:18%;top:46%;width:26%;height:16%;border-radius:40% 40% 30% 30%;background:#2d5fb8;box-shadow:70px 6px 0 #2d5fb8}
+.stats{position:absolute;left:68px;right:16px;top:808px;display:flex;justify-content:space-between;font:400 15px var(--f);color:#8b98a5}
+
+/* Dock: bar + selection. Geometry measured on the reference (X iOS app, 2.63 px/pt). */
+.dock{position:absolute;left:24.5px;bottom:22px;width:344px;height:61px}
+.bar{position:absolute;inset:0;border-radius:30.5px;transform-origin:50% 50%;--bezel:22;--refract:10;--blur:.8;--mag:0;--disp:0}  /* the reference bar barely blurs: the photo edge under it stays sharp */
+.icons{position:absolute;inset:0;pointer-events:none}
+.icons i{position:absolute;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px}
+.icons svg{width:100%;height:100%;display:block;overflow:visible}
+.icons b{position:absolute;left:13px;top:-9px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:#1d9bf0;color:#fff;
+  font:600 11px/17px var(--f);text-align:center;box-shadow:0 0 0 1.5px #fff}
+.out svg *{fill:none;stroke:#0f1419;stroke-width:1.9;stroke-linejoin:round;stroke-linecap:round}
+.fil svg *{fill:#0f1419;stroke:#0f1419;stroke-width:1.9;stroke-linejoin:round;stroke-linecap:round}
+.fil svg .st{fill:none;stroke-width:3}
+/* the rest-state selection: grey pill (fades out while the lens grows) */
+.pill{position:absolute;background:rgba(24,24,27,.085);box-shadow:inset 0 0 6px rgba(255,255,255,.35)}
+.lens{position:absolute;left:0;top:0}
+</style></head><body>
+<div class="scr" id="scr">
+  <div class="feed"><div class="who"></div><p>Liquid Glass makeover is slowly reaching more users. Have you got the new look yet?</p>
+    <div class="media"></div><div class="stats"><span>↩ 53</span><span>⇄ 232</span><span>♡ 836</span><span>▥ 98K</span><span>⇪</span></div></div>
+  <div class="dock" id="dock">
+    <div class="bar glass glass-tabbar" id="bar"></div>
+    <div class="pill" id="pill"></div>
+    <!-- outline icons everywhere; filled icons only inside the selection (clip-path follows the lens) -->
+    <div class="icons out" id="out"></div>
+    <div class="icons fil" id="fil"></div>
+    <div class="lens glass glass-lens" id="lens"></div>
+  </div>
+</div>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <g id="i0"><path d="M3.5 10.2 12 3.3l8.5 6.9V20a.8.8 0 0 1-.8.8H15v-6.3H9v6.3H4.3a.8.8 0 0 1-.8-.8z"/></g>
+  <g id="i1"><circle class="st" cx="10.8" cy="10.8" r="7"/><path class="st" d="m16 16 5 5"/></g>
+  <g id="i2"><path d="M5.5 17V11a6.5 6.5 0 0 1 13 0v6l1.8 1.6H3.7z"/><path class="st" d="M9.8 20.6a2.4 2.4 0 0 0 4.4 0"/></g>
+  <g id="i3"><path d="M12 3.2c5 0 9 3.6 9 8s-4 8-9 8c-1.3 0-2.5-.2-3.6-.6L3.6 20.4l1.5-4.1C3.8 14.9 3 13.1 3 11.2c0-4.4 4-8 9-8z"/></g>
+  <g id="i4"><circle cx="12" cy="7.6" r="4"/><path d="M4.2 20.6c0-4.2 3.5-7 7.8-7s7.8 2.8 7.8 7z"/></g>
+</defs></svg>
+<script>/*GLASSJS*/</script>
+<script>
+// ---- geometry (pt), measured on the reference recording ----
+const BAR_W = 344, BAR_H = 61, TAB0 = 42, TAB = 65;     // tab centres: 42 + 65·i
+const PILL = [74, 51], LENS = [103, 79];
+LENS.bz = .12; LENS.rf = .12;                             // bend zone / strength as a share of the lens height (window.LENS to tune)
+window.LENS = LENS;                 // rest pill → lens while held
+const BAR_GROW = .02;                                     // the bar swells 2% while held
+const badges = { 2: '1', 3: '20+' };
+for (const id of ['out', 'fil']) document.getElementById(id).innerHTML = [0, 1, 2, 3, 4].map((i) =>
+  `<i style="left:${TAB0 + TAB * i}px"><svg viewBox="0 0 24 24">${document.getElementById('i' + i).innerHTML}</svg>${badges[i] ? `<b>${badges[i]}</b>` : ''}</i>`).join('');
+const $ = (id) => document.getElementById(id);
+
+// ---- springs (critically / under-damped), stepped at a fixed dt so a frame at time t is always the same ----
+function spring(o) { return { x: o.x, v: 0, w: o.w, z: o.z, step(target, dt) { const a = -2 * this.z * this.w * this.v - this.w * this.w * (this.x - target); this.v += a * dt; this.x += this.v * dt; } }; }
+// lift: ~130 ms to full size (reference: 4–5 frames at 30 fps), slight overshoot; release a bit softer
+const S = { lift: spring({ x: 0, w: 26, z: .62 }), x: spring({ x: TAB0, w: 34, z: .86 }) };
+let held = false, finger = TAB0, sel = 0;
+const clamp = (v, a, b) => Math.min(Math.max(v, a), b);
+const nearest = (x) => clamp(Math.round((x - TAB0) / TAB), 0, 4);
+
+function step(dt) {
+  S.lift.w = held ? 26 : 17; S.lift.z = held ? .62 : .6;   // release ≈ 250 ms: the lens shrinks back into the pill
+  S.lift.step(held ? 1 : 0, dt);
+  S.x.z = held ? .86 : .62;
+  S.x.step(held ? clamp(finger, TAB0 - 6, TAB0 + 4 * TAB + 6) : TAB0 + TAB * sel, dt);
+}
+
+function draw() {
+  const p = S.lift.x, pc = clamp(p, 0, 1.2);
+  const v = S.x.v;                                        // pt/s
+  const stretch = clamp(Math.abs(v) / 2400, 0, .12) * clamp(p, 0, 1);   // widen along the motion, flatten a little
+  const w = PILL[0] + (LENS[0] - PILL[0]) * pc, h = PILL[1] + (LENS[1] - PILL[1]) * pc;
+  const W = w * (1 + stretch), H = h * (1 - stretch * .35);
+  const cx = S.x.x, cy = BAR_H / 2;
+  const L = cx - W / 2, T = cy - H / 2, R = Math.min(W, H) / 2;
+  $('bar').style.transform = `scale(${1 + BAR_GROW * clamp(p, 0, 1)})`;
+  const pill = $('pill');
+  Object.assign(pill.style, { left: L + 'px', top: T + 'px', width: W + 'px', height: H + 'px', borderRadius: R + 'px', opacity: clamp(1 - p * 1.8, 0, 1) });
+  $('fil').style.clipPath = `inset(${T}px ${BAR_W - L - W}px ${BAR_H - T - H}px ${L}px round ${R}px)`;
+  const lens = $('lens'), lw = Math.round(W), lh = Math.round(H);
+  Object.assign(lens.style, { width: lw + 'px', height: lh + 'px', borderRadius: Math.min(lw, lh) / 2 + 'px',
+    transform: `translate(${(cx - lw / 2).toFixed(2)}px,${(cy - lh / 2).toFixed(2)}px)`, opacity: clamp((p - .03) * 3.5, 0, 1),
+    visibility: p > .03 ? 'visible' : 'hidden' });
+  // bend scales with the lens: bezel/refract ≈ .12 × height on top/bottom (×3.3 / ×2.3 on the caps, glass.css)
+  lens.style.setProperty('--bezel', Math.round(lh * LENS.bz)); lens.style.setProperty('--refract', Math.round(lh * LENS.rf));
+  if (p > .03) applyGlass({ querySelectorAll: () => [lens] });   // only the lens; maps are cached per size
+}
+
+// ---- scripted take (for recording): press on Home, drag across to Profile, back to Messages, release ----
+const KEYS = [[0, TAB0, 0], [.35, TAB0, 1], [.75, TAB0 + 4, 1], [1.45, TAB0 + TAB, 1], [2.0, TAB0 + TAB * 2, 1], [2.55, TAB0 + TAB * 3, 1],
+  [3.15, TAB0 + TAB * 4 + 4, 1], [3.7, TAB0 + TAB * 4 + 4, 1], [4.2, TAB0 + TAB * 3, 1], [4.55, TAB0 + TAB * 3, 0], [5.6, TAB0 + TAB * 3, 0]];
+const ease = (u) => u * u * (3 - 2 * u);
+function script(t) {
+  let k = KEYS.findIndex((q) => q[0] > t); if (k < 0) return [KEYS.at(-1)[1], 0]; if (k === 0) return [KEYS[0][1], 0];
+  const [t0, x0, h0] = KEYS[k - 1], [t1, x1] = KEYS[k];
+  return [x0 + (x1 - x0) * ease((t - t0) / (t1 - t0)), h0];
+}
+let simT = 0;
+window.DURATION = KEYS.at(-1)[0];
+window.renderAt = function (t) {         // deterministic: re-simulate from 0 if going back
+  if (t < simT) { S.lift.x = 0; S.lift.v = 0; S.x.x = TAB0; S.x.v = 0; sel = 0; simT = 0; }
+  const dt = 1 / 600;
+  while (simT < t) {
+    const [fx, h] = script(simT); if (held && !h) sel = nearest(fx); held = !!h; finger = fx;
+    step(dt); simT += dt;
+  }
+  draw();
+};
+
+// ---- live: drag with a mouse or a finger; ?take plays the scripted take on a loop ----
+const dock = $('dock');
+const local = (e) => (e.clientX - dock.getBoundingClientRect().left) / (dock.getBoundingClientRect().width / BAR_W);
+dock.addEventListener('pointerdown', (e) => { held = true; finger = local(e); dock.setPointerCapture(e.pointerId); });
+dock.addEventListener('pointermove', (e) => { if (held) finger = local(e); });
+const up = () => { if (held) { held = false; sel = nearest(finger); } };
+dock.addEventListener('pointerup', up); dock.addEventListener('pointercancel', up);
+applyGlass({ querySelectorAll: () => [$('bar')] });
+const take = location.search.includes('take'), still = location.search.includes('still');
+draw();
+if (!still) {
+  let last = performance.now(), t0 = last;
+  (function loop(now) {
+    if (take) renderAt(((now - t0) / 1000) % DURATION);
+    else { for (let dt = (now - last) / 1000; dt > 0; dt -= 1 / 600) step(Math.min(dt, 1 / 600)); draw(); }
+    last = now; requestAnimationFrame(loop);
+  })(last);
+}
+</script>
+<style>/*GLASSCSS*/</style>
+</body></html>

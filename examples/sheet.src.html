@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Glass sheet</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{--f:-apple-system,"SF Pro Text",system-ui,sans-serif;font-family:var(--f);-webkit-font-smoothing:antialiased;color:#000;background:#adb8be}
+/* iPhone Pro Max, 440×956 pt */
+.scr{width:440px;height:956px;position:relative;overflow:hidden;background:#adb9bf}
+.status{position:absolute;top:0;left:0;right:0;height:60px;display:flex;justify-content:space-between;align-items:center;padding:20px 40px 0 57px;font:600 19px/1 var(--f);letter-spacing:-.01em}
+.status .ic{display:flex;gap:7px;align-items:center}
+.status .bat{background:#000;color:#fff;font:700 13px/1 var(--f);border-radius:6px;padding:3px 5px}
+/* parent sheet (Settings) */
+.parent{position:absolute;top:71px;left:0;right:0;bottom:-40px;background:#e0e0e0;border-radius:46px 46px 0 0;padding-top:0}
+.nav{position:absolute;top:22px;left:0;right:0;height:46px;display:flex;align-items:center;justify-content:center;font:600 18.5px/1 var(--f)}
+.back{position:absolute;left:21px;top:21px;width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.035);display:grid;place-items:center}
+.sec{position:absolute;left:34.5px;font:400 14px/1 var(--f);color:#6e6e73;letter-spacing:.01em}
+.card{position:absolute;left:21px;right:21px;background:#d5d4d9;border-radius:26px;overflow:hidden}
+.card .r{height:53.8px;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 17px;font:400 18.5px/1 var(--f);position:relative}
+.card .r+.r:before{content:"";position:absolute;top:0;left:17px;right:0;height:.5px;background:rgba(0,0,0,.12)}
+.card .r b{font-weight:600;display:flex;gap:12px;align-items:center}
+.card .r b:after{content:"";width:8px;height:8px;border:solid #9a9a9f;border-width:2px 2px 0 0;transform:rotate(45deg)}
+.tg{width:64px;height:28px;border-radius:14px;background:#34c759;position:relative}
+.tg:after{content:"";position:absolute;right:2px;top:2px;width:38px;height:24px;border-radius:12px;background:#fff}
+
+/* the glass sheet */
+.glass-sheet{position:absolute;left:8.4px;right:8.6px;bottom:8.9px;height:573.4px}
+.in{position:absolute;inset:0}
+.art{position:absolute;top:33.6px;left:50%;margin-left:-50px;width:100px;height:87px}
+.ttl{position:absolute;top:0;left:0;right:0;text-align:center;font:700 28.7px/1 var(--f);letter-spacing:-.01em}
+.opts{position:absolute;left:34.5px;right:39.6px}
+.opt{height:50.6px;display:flex;align-items:center;justify-content:space-between;font:400 17px/1 var(--f);color:#444447;position:relative}
+.opt+.opt:before{content:"";position:absolute;top:0;left:0;right:0;height:.5px;background:rgba(0,0,0,.075)}
+.opt.on{color:#000}
+.radio{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.6);box-shadow:inset 0 0 0 1px rgba(0,0,0,.14)}
+.radio.on{background:var(--accent);box-shadow:inset 0 0 0 6.5px var(--accent),inset 0 0 0 20px #fff}
+.foot{position:absolute;left:34.5px;right:38px;font:400 13.1px/15.7px var(--f);color:#3a3a3d}
+.glass-tint.done{position:absolute;left:34.5px;right:34.5px;height:59.7px;border-radius:30px;display:flex;align-items:center;justify-content:center;font:600 17px/1 var(--f);--label:#fee5ae;--rim-h:0;--rim-l:.06;box-shadow:-2px 3px 10px -3px rgba(0,0,0,.14)}
+</style>
+<style>/*GLASSCSS*/</style>
+</head><body style="--accent:#ed7143">
+<div class="scr">
+ <div class="status"><span>10:32</span><span class="ic"><svg width="22" height="14" viewBox="0 0 22 14"><rect x="0" y="9" width="4" height="5" rx="1"/><rect x="6" y="6" width="4" height="8" rx="1"/><rect x="12" y="3" width="4" height="11" rx="1"/><rect x="18" y="0" width="4" height="14" rx="1" opacity=".3"/></svg><svg width="18" height="13" viewBox="0 0 18 13"><path d="M9 13 6 9.6a4.5 4.5 0 0 1 6 0zM3.2 6.8a8.3 8.3 0 0 1 11.6 0l-1.6 1.7a6 6 0 0 0-8.4 0zM.4 4a12.3 12.3 0 0 1 17.2 0L16 5.6a10 10 0 0 0-14 0z"/></svg><span class="bat">97</span></span></div>
+ <div class="parent">
+  <span class="back"><svg width="14" height="22" viewBox="0 0 14 22" fill="none" stroke="#111" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2 2 11l9 9"/></svg></span>
+  <div class="nav">Settings</div>
+  <div class="sec" style="top:102px">GENERAL</div>
+  <div class="card" style="top:120px">
+   <div class="r">Units of Measure<b>Metric</b></div>
+   <div class="r">Active Energy<b>kcal &amp; Emoji</b></div>
+   <div class="r">Start Week On<b>Monday</b></div>
+   <div class="r">Temperature<b>Absolute</b></div>
+   <div class="r">Self-Evaluation Prompt<b>Always Show</b></div>
+  </div>
+  <div class="sec" style="top:418px">APPEARANCE</div>
+  <div class="card" style="top:436px">
+   <div class="r">Chart Style<b>Rings</b></div>
+   <div class="r">Meditation<b>On</b></div>
+   <div class="r">Rest Days<b>Auto</b></div>
+   <div class="r">Include Steps<span class="tg"></span></div>
+   <div class="r">Show Streaks<span class="tg"></span></div>
+   <div class="r">Weekly Summary<b>Sunday</b></div>
+   <div class="r">Haptics<span class="tg"></span></div>
+   <div class="r">Match Photos With Workouts<b></b></div>
+  </div>
+ </div>
+
+ <div class="glass glass-sheet"><div class="in">
+  <svg class="art" viewBox="0 0 100 87"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb36b"/><stop offset="1" stop-color="#e2456b"/></linearGradient><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd86b"/><stop offset="1" stop-color="#f59a3d"/></linearGradient></defs>
+   <rect x="14" y="20" width="72" height="62" rx="24" fill="url(#g1)"/><circle cx="50" cy="51" r="17" fill="url(#g2)"/><path d="M43 52q7 6 14 0" stroke="#7a3b16" stroke-width="2" fill="none" stroke-linecap="round"/>
+   <path d="M76 2l2.4 6.6L85 11l-6.6 2.4L76 20l-2.4-6.6L67 11l6.6-2.4z" fill="#f6c443"/><path d="M24 8l1.6 4.4L30 14l-4.4 1.6L24 20l-1.6-4.4L18 14l4.4-1.6z" fill="#f6c443"/></svg>
+  <div class="ttl">Self-Evaluation Prompt</div>
+  <div class="opts">
+   <div class="opt on">Always Show<span class="radio on"></span></div>
+   <div class="opt">Show If Off<span class="radio"></span></div>
+   <div class="opt">Never Show<span class="radio"></span></div>
+  </div>
+  <p class="foot">Shows “Feeling different?” on the Today tab until you’ve answered for the day. “Show If Off” shows it only when your measured metrics are off.</p>
+  <span class="glass glass-tint done" style="--tint:var(--accent)">Done</span>
+ </div></div>
+</div>
+<script>/*GLASSJS*/</script>
+<script>
+ // layout positions (pt, relative to the sheet) measured on the reference
+ const q = (s) => document.querySelector(s);
+ q('.ttl').style.top = '143px'; q('.opts').style.top = '200.6px'; q('.foot').style.top = '384px'; q('.done').style.top = '479.2px';
+ applyGlass(document);
+</script>
+</body></html>

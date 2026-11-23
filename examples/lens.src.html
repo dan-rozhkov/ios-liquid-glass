@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Lens options</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{--f:-apple-system,"SF Pro Text",system-ui,sans-serif;font-family:var(--f);-webkit-font-smoothing:antialiased;color:#18181b;background:#fff}
+/* Opt-in lens options of glass.js over the same text and stripes, so the bend is easy to read. */
+.stage{width:1200px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:40px}
+.cell{position:relative;height:250px;border-radius:24px;overflow:hidden;background:
+  repeating-linear-gradient(90deg,#fff 0 14px,#0088ff 14px 17px,#fff 17px 30px,#ff383c 30px 33px,#fff 33px 46px);}
+.cell p{position:absolute;inset:16px 14px auto;font:600 17px/22px var(--f);color:#18181b}
+.cell .cap{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;background:#fff;font:500 13px/1.3 var(--f);color:#3a3a3d;z-index:4}
+.cell .glass{position:absolute;left:50%;top:104px;transform:translateX(-50%)}
+.pill{width:170px;height:64px;border-radius:32px}
+.card{width:180px;height:96px;border-radius:12px}
+.card.g{top:78px}
+</style></head><body>
+<div class="stage">
+  <div class="cell"><p>Liquid Glass bends whatever passes under the lens near its rim.</p><div class="glass pill" style="--bezel:20;--refract:12;--blur:.4"></div><div class="cap">Default (no options)</div></div>
+  <div class="cell"><p>Liquid Glass bends whatever passes under the lens near its rim.</p><div class="glass pill" style="--bezel:20;--refract:12;--blur:.4;--mag:.25"></div><div class="cap">--mag:.25 — middle magnified</div></div>
+  <div class="cell"><p>Liquid Glass bends whatever passes under the lens near its rim.</p><div class="glass pill" style="--bezel:20;--refract:12;--blur:.4;--disp:.3"></div><div class="cap">--disp:.3 — colour split at the rim</div></div>
+  <div class="cell"><p>Liquid Glass bends whatever passes under the lens near its rim.</p><div class="glass card g" style="--bezel:30;--refract:14;--blur:.4"></div><div class="cap">--bezel:30 on radius 12 — corners</div></div>
+</div>
+<script>/*GLASSJS*/</script>
+<script>applyGlass(document)</script>
+<style>/*GLASSCSS*/</style>
+</body></html>
