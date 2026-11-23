@@ -41,3 +41,7 @@ Reference screenshots used for matching are not in the repository (they are scre
 ## Credits
 
 The lens magnification, colour split and corner handling borrow the maths of [bilalgursen/liquid-glass](https://github.com/bilalgursen/liquid-glass) (MIT); the values and the rendering path are this skill's own.
+
+## License
+
+[MIT](LICENSE)
